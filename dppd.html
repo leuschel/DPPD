@@ -1,0 +1,137 @@
+<HTML><HEAD>
+<TITLE>DPPD (Dozens of Problems for Partial Deduction)</TITLE>
+</HEAD>
+
+<BODY>
+
+<H2>The DPPD (Dozens of Problems for Partial Deduction) Library of Benchmarks</H2>
+
+Maintained by Michael Leuschel</A>.
+Suggestions, comments or new benchmark ideas, are always
+ welcome.
+<P>
+
+This library aims at being a standard suite of benchmarks for partial
+deduction. It started out by the observation that the only accepted
+benchmark suite in partial deduction (the so called Lam and Kusalik benchmarks)
+contains too few benchmarks, most of which are too simple and too small.
+So the idea came up to generate something like the TPTP (Thousands of
+Problems for Theorem Proving) library, but for partial deduction.<P>
+
+The library contains benchmarks consisting of declarative logic programs,
+together with descriptions on the particular specialisation that
+should be performed by a partial deducer. The library also contains
+run-time queries by which the specialised program should be compared
+to the original.
+
+<H3>Allowed Built-in's</H3>
+
+All built-in's which can be given a declarative semantics (maybe under
+some restrictions of the selection rule) are allowed.
+For instance the following built-in's might occur in some of the
+benchmark programs:
+<UL>
+<LI> 	=../2
+<LI>	call/1
+<LI>	=/2
+<LI>	is/2
+<LI>	</2, =</2, </2, >=/2
+<LI>	nonvar/1	(supposed to be delayed until its argument is nonvar)
+<LI>	ground/1	(supposed to be delayed until its argument is nonvar)
+<LI>	\=/2, \==/2	(supposed to be delayed until sufficiently instantiated)
+</UL>
+
+<H3>The Benchmarks</H3>
+
+The benchmarks marked with (LK) are the original Lam and Kusalik
+ benchmarks.
+Benchmarks marked with (JJ) were brought to my attention or designed
+ by Jesper Jorgensen.
+More details about the origins of the benchmarks can usually be found
+ in their respective descriptions.<P>
+
+<H4>Pure LP benchmarks</H4>
+
+
+<UL>
+<LI> <A HREF="dppd/advisor.html">advisor</A>
+<LI> <A HREF="dppd/applast.html">applast</A>
+<LI> <A HREF="dppd/ctl.html">ctl</A>
+<LI> <A HREF="dppd/contains.lam.html">contains</A> (LK)
+<LI> <A HREF="dppd/contains.kmp.html">contains.kmp</A>
+<LI> <A HREF="dppd/depth.html">depth</A> (LK)
+<LI> <A HREF="dppd/doubleapp.html">doubleapp</A> 
+<LI> <A HREF="dppd/ex_depth.html">ex_depth</A>
+<LI> <A HREF="dppd/flip.html">flip</A> (JJ)
+<LI> <A HREF="dppd/grammar.html">grammar</A> (LK)
+<LI> <A HREF="dppd/groundunify.complex.html">groundunify.complex</A>
+<LI> <A HREF="dppd/groundunify.simple.html">groundunify.simple</A>
+<LI> <A HREF="dppd/imperative-solve.power.html">imperative.power</A>
+<LI> <A HREF="dppd/liftsolve.app.html">liftsolve.app</A>
+<LI> <A HREF="dppd/liftsolve.db1.html">liftsolve.db1</A>
+<LI> <A HREF="dppd/liftsolve.db2.html">liftsolve.db2</A>
+<LI> <A HREF="dppd/liftsolve.lmkng.html">liftsolve.lmkng</A>
+<LI> <A HREF="dppd/map.reduce.html">map.reduce</A>
+<LI> <A HREF="dppd/map.rev.html">map.rev</A>
+<LI> <A HREF="dppd/match-append.html">match-append</A> (JJ)
+<LI> <A HREF="dppd/match.html">match</A> (LK)
+<LI> <A HREF="dppd/match.kmp.html">match.kmp</A>
+<LI> <A HREF="dppd/maxlength.html">maxlength</A>
+<LI> <A HREF="dppd/memo-solve.html">memo-solve</A>
+<LI> <A HREF="dppd/missionaries.html">missionaries</A>
+<LI> <A HREF="dppd/model_elim.html">model-elim.app</A>
+<LI> <A HREF="dppd/petri-meta.html">petri-meta</A>
+<LI> <A HREF="dppd/petri-object.html">petri-object</A>
+<LI> <A HREF="dppd/regexp.r1.html">regexp.r1</A>
+<LI> <A HREF="dppd/regexp.r2.html">regexp.r2</A>
+<LI> <A HREF="dppd/regexp.r3.html">regexp.r3</A>
+<LI> <A HREF="dppd/relative.html">relative</A> (LK)
+<LI> <A HREF="dppd/remove.html">remove</A> (JJ)
+<LI> <A HREF="dppd/remove2.html">remove2</A> (JJ)
+<LI> <A HREF="dppd/rev_acc_type.html">rev_acc_type</A>
+<LI> <A HREF="dppd/rev_acc_type.inffail.html">rev_acc_type.inffail</A>
+<LI> <A HREF="dppd/rotateprune.html">rotateprune</A>
+<LI> <A HREF="dppd/ssuply.html">ssuply</A> (LK)
+<LI> <A HREF="dppd/transpose.html">transpose</A> (LK)
+<LI> <A HREF="dppd/upto.sum1.html">upto.sum1</A> (JJ)
+<LI> <A HREF="dppd/upto.sum2.html">upto.sum2</A> (JJ)
+</UL>
+
+<H4>CLP benchmarks</H4>
+
+<UL>
+	<LI> <A HREF="dppd/ctlclp.html">CTL CLP</A> </LI>
+	<LI> <A HREF="dppd/loanMemo.html">loanMemo</A> </LI>
+	<LI> <A HREF="dppd/loanUnfold.html">loanUnfold</A> </LI>
+	<LI> <A HREF="dppd/multiply.html">multiply</A> </LI>
+</UL>
+
+
+<H4>Interpreters, added after 2011</H4>
+
+<UL>
+	<LI> <A HREF="dppd/dbaccess.html">dbaccess</A> </LI>
+	<LI> <A HREF="dppd/javabc.html">javabc</A> </LI>
+	<LI> <A HREF="dppd/lambdaint.html">lambdaint</A> </LI>
+    <LI> <A HREF="dppd/picemul.html">picemul</A> </LI>
+	<LI> <A HREF="dppd/vanilla-doubleapp.html">vanilla-doubleapp</A> </LI>
+</UL>
+
+<H3>Acknowledgements</H3>
+
+Direct or indirect contributors to the above list are:
+<I>
+Elvira Albert,
+Andre de Waal,
+John Gallagher, Micky Gomez-Zamalloa, Robert Glueck, Kim Henriksen, Thomas Horvath, Jesper Jorgensen, John Gallagher,
+A. Kusalik, J. Lam, Bern Martens,
+Alberto Pettorossi, Maurizio Proietti, German Puebla,
+Morten Heine Sorensen, Valentin Turchin and Phil Wadler
+</I>.
+
+<HR>
+<!-- ================================================================= -->
+
+
+
+</BODY>

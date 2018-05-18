@@ -1,0 +1,61 @@
+<HTML><HEAD>
+<TITLE>DPPD: remove</TITLE>
+</HEAD>
+
+<BODY>
+
+<H2>The "<DFN>remove</DFN>" Benchmark</H2>
+
+Part of the <A HREF="../dppd.html">DPPD Library</A>.
+
+
+<H3>General Description</H3>
+
+This is a rather sophisticated deforestation example,
+ handed over to me by Jesper Jorgensen.
+
+<H3>The benchmark program</H3>
+
+<PRE>
+rr(X,Y) :- r(X,T), r(T,Y).
+
+r([],[]).
+r([X],[X]).
+r([X,X|T],[X|T1]) :- r(T,T1).
+r([X,Y|T],[X|T1]) :- X \== Y, r([Y|T],T1).
+</PRE>
+
+
+<H3>The partial deduction query</H3>
+
+<PRE>
+ :- rr(X,Y).
+</PRE>
+
+
+
+<H3>The run-time queries</H3>
+
+<PRE>
+ :- rr([a,a,b,b,a,a,a,a,c,d,a,b,a,a,d,d],Y).
+ :- rr([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z],Y).
+ :- rr([a,b,b,b,c,d,e,f,g,g,h,i,j,k,l,m,m,m,m,m,m,m,m,
+		n,o,p,q,r,s,t,u,v,v,v,v,w,x,y,z,z,z],Y).
+</PRE>
+
+
+
+<H3>Example solution</H3>
+
+<PRE>
+to be inserted
+</PRE>
+
+
+<HR>
+<!-- ================================================================= -->
+
+
+<ADDRESS>
+<A HREF="http://www.stups.uni-duesseldorf.de/w/Imprint">Imprint</A>
+</ADDRESS>

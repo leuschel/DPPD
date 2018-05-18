@@ -1,0 +1,76 @@
+<HTML><HEAD>
+<TITLE>DPPD: match</TITLE>
+</HEAD>
+
+<BODY>
+
+<H2>The "<DFN>match</DFN>" Benchmark</H2>
+
+Part of the <A HREF="../dppd.html">DPPD Library</A>.
+
+
+<H3>General Description</H3>
+
+This is the semi-naive string matcher from the Lam & Kusalik benchmarks.
+The goal is to obtain a KMP matcher for the pattern <CODE>aab</CODE>.
+This benchmark program uses the <CODE>\==</CODE> builtin.
+The run-time queries are less sophisticated than the ones for
+ <A HREF="match.kmp.html">match.kmp</A>.
+
+<H3>The benchmark program</H3>
+
+<PRE>
+match(Pat,T) :- match1(Pat,T,Pat,T).
+
+match1([],Ts,P,T).
+match1([A|Ps],[B|Ts],P,[X|T]) :-
+	A\==B,
+	match1(P,T,P,T).
+match1([A|Ps],[A|Ts],P,T) :-
+	match1(Ps,Ts,P,T).
+</PRE>
+
+
+<H3>The partial deduction query</H3>
+
+<PRE>
+ :- match([a,a,b],String).
+</PRE>
+
+
+
+<H3>The run-time queries</H3>
+
+<PRE>
+ :- match([a,a,b],[a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,a,a,b,w,x,y,z]).
+</PRE>
+
+
+
+<H3>Example solution</H3>
+
+The following KMP-matcher can be obtained by the <A HREF="/~mal/systems/ecce.html">ECCE partial deduction system </A>
+(to my knowledge this has first been achieved by John Gallagher with his
+ SP system).
+
+<PRE>
+match__1([X1|X2]) :- match1__2(X1,X2).
+
+match1__2(X1,[X2|X3]) :- a \= X1, match1__2(X2,X3).
+match1__2(a,[X1|X2]) :- match1__3(X1,X2).
+
+match1__3(X1,X2) :- a \= X1, match1__2(X1,X2).
+match1__3(a,[X1|X2]) :- match1__4(X1,X2).
+
+match1__4(X1,X2) :- b \= X1, match1__3(X1,X2).
+match1__4(b,X1).
+</PRE>
+
+
+<HR>
+<!-- ================================================================= -->
+
+
+<ADDRESS>
+<A HREF="http://www.stups.uni-duesseldorf.de/w/Imprint">Imprint</A>
+</ADDRESS>

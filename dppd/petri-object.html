@@ -1,0 +1,56 @@
+<HTML><HEAD>
+<TITLE>DPPD: petri-object</TITLE>
+</HEAD>
+
+<BODY>
+
+<H2>The "<DFN>petri-object</DFN>" Benchmark</H2>
+
+Part of the <A HREF="../dppd.html">DPPD Library</A>.
+
+
+<H3>General Description</H3>
+
+A reified version of the <A HREF="petri-meta.html">petri-meta</A> benchmark.
+The goal is to prove that for the Petri net at hand
+(and for <I>any</I> number of processes)
+there is no trace that leads to an unsafe state with
+more than 1 process in its critical section.
+
+<H3>The benchmark program</H3>
+
+<PRE>
+unsafe(_,_,s(s(X)),_,_).
+unsafe(s(X),s(P),CS,Y,C) :- unsafe(X,P,s(CS),Y,C).
+unsafe(X,P,s(CS),Y,C) :- unsafe(X,s(P),CS,s(Y),C).
+unsafe(X,P,CS,s(Y),C) :- unsafe(s(X),P,CS,Y,s(C)).
+</PRE>
+
+
+<H3>The partial deduction query</H3>
+
+<PRE>
+ :-  unsafe(X,s(0),0,0,0).
+</PRE>
+
+
+
+
+<H3>Example solution</H3>
+
+With the 
+<A HREF="/~mal/systems/ecce.html">ECCE partial deduction system </A> one can obtain, together with the more specific program construction,
+ a result which is basically as follows:
+
+<PRE>
+unsafe(X,s(0),0,0,0) :- fail.
+</PRE>
+
+
+<HR>
+<!-- ================================================================= -->
+
+
+<ADDRESS>
+<A HREF="http://www.stups.uni-duesseldorf.de/w/Imprint">Imprint</A>
+</ADDRESS>

@@ -1,0 +1,38 @@
+<HTML><HEAD>
+<TITLE>DPPD: match.kmp</TITLE>
+</HEAD>
+
+<BODY>
+
+<H2>The "<DFN>match.kmp</DFN>" Benchmark</H2>
+
+Part of the <A HREF="../dppd.html">DPPD Library</A>.
+
+
+<H3>General Description</H3>
+
+This is exactly like the Lam & Kusalik benchmark
+ <A HREF="match.html">match</A>,
+ except that the
+ run-time queries are more sophisticated than the ones for
+ <A HREF="match.html">match</A>.
+
+
+
+<H3>The run-time queries</H3>
+
+<PRE>
+ :- match([a,a,b], [a,a,a,a,c,d,a,a,a,e,f,g,h,a,a,b,d,f]).
+ :- match([a,a,b], [a,b,a,b,a,a,a,a,c,a,a,a,a,a,a,a,a,b]).
+ :- match([a,a,b], [a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,b]).
+ :- match([a,a,b], [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,a,a,b,w,x,y,z]).
+</PRE>
+
+
+<HR>
+<!-- ================================================================= -->
+
+
+<ADDRESS>
+<A HREF="http://www.stups.uni-duesseldorf.de/w/Imprint">Imprint</A>
+</ADDRESS>

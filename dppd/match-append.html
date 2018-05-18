@@ -1,0 +1,69 @@
+<HTML><HEAD>
+<TITLE>DPPD: match-append</TITLE>
+</HEAD>
+
+<BODY>
+
+<H2>The "<DFN>match-append</DFN>" Benchmark</H2>
+
+Part of the <A HREF="../dppd.html">DPPD Library</A>.
+
+
+<H3>General Description</H3>
+
+A very naive string matcher, written with 2 appends.
+Same runtime queries than match.kmp.
+This benchmark
+ contains no built-in's nor negations.
+
+<H3>The benchmark program</H3>
+
+<PRE>
+match(P,S) :- append(S1,_,S),append(_,P,S1).
+
+append([],L,L).
+append([H|L1],L2,[H|L3]) :- append(L1,L2,L3).
+</PRE>
+
+
+<H3>The partial deduction query</H3>
+
+<PRE>
+ :- match([a,a,b],String).
+</PRE>
+
+
+
+<H3>The run-time queries</H3>
+
+<PRE>
+ :- match([a,a,b], [a,a,a,a,c,d,a,a,a,e,f,g,h,a,a,b,d,f]).
+ :- match([a,a,b], [a,b,a,b,a,a,a,a,c,a,a,a,a,a,a,a,a,b]).
+ :- match([a,a,b], [a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,a,b]).
+ :- match([a,a,b], [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,a,a,b,w,x,y,z]).
+</PRE>
+
+
+
+<H3>Example solution</H3>
+
+The following can be obtained by the <A HREF="/~mal/systems/ecce.html">ECCE partial deduction system </A>.
+Although it runs considerably faster than the original program 
+ (33 times actually) it is still
+ not a KMP style matcher.
+
+<PRE>
+ match__1([X1,X2,X3|X4]) :- append__append(X4,X1,X2,X3).
+
+ append__append(X1,a,a,b).
+ append__append([X1|X2],X3,X4,X5) :- append__append(X2,X4,X5,X1).
+</PRE>
+
+
+<HR>
+<!-- ================================================================= -->
+
+
+<ADDRESS>
+<A HREF="http://www.stups.uni-duesseldorf.de/w/Imprint">Imprint</A>
+</ADDRESS>

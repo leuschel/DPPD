@@ -1,0 +1,83 @@
+<HTML><HEAD>
+<TITLE>DPPD: transpose</TITLE>
+</HEAD>
+
+<BODY>
+
+<H2>The "<DFN>transpose</DFN>" Benchmark</H2>
+
+Part of the <A HREF="../dppd.html">DPPD Library</A>.
+
+
+<H3>General Description</H3>
+
+A Lam & Kusalik benchmark which can be fully unfolded.
+The program transposes matrices (of any dimension)
+ and uses neither negation nor built-in's.
+
+<H3>The benchmark program</H3>
+
+<PRE>
+transpose(Xs,[]) :-
+	nullrows(Xs).
+transpose(Xs,[Y|Ys]) :-
+	makerow(Xs,Y,Zs),
+	transpose(Zs,Ys).
+
+makerow([],[],[]).
+makerow([[X|Xs]|Ys],[X|Xs1],[Xs|Zs]) :-
+	makerow(Ys,Xs1,Zs).
+
+nullrows([]).
+nullrows([[]|Ns]) :-
+	nullrows(Ns).
+</PRE>
+
+
+<H3>The partial deduction query</H3>
+
+<PRE>
+ :- transpose([[X1,X2,X3,X4,X5,X6,X7,X8,X9],Xr2,Xr3],Xtrm).
+</PRE>
+
+
+
+<H3>The run-time queries</H3>
+
+<PRE>
+ :- transpose([[1,2,3,4,5,6,7,8,9],[2,3,4,5,6,7,8,9,10],
+	       [3,4,5,6,7,8,9,10,11]],Xtrm).
+</PRE>
+
+
+
+<H3>Example solution</H3>
+
+This benchmark can be fully unfolded.
+With the 
+<A HREF="/~mal/systems/ecce.html">ECCE partial deduction system </A> one can obtain the following
+ program, which runs more than 5 times faster than the original:
+
+<PRE>
+transpose__1(X1,X2,X3,X4,X5,X6,X7,X8,X9,
+            [X10,X11,X12,X13,X14,X15,X16,X17,X18],
+            [X19,X20,X21,X22,X23,X24,X25,X26,X27],
+ [[X1,X10,X19],
+  [X2,X11,X20],
+  [X3,X12,X21],
+  [X4,X13,X22],
+  [X5,X14,X23],
+  [X6,X15,X24],
+  [X7,X16,X25],
+  [X8,X17,X26],
+  [X9,X18,X27]]).
+</PRE>
+
+
+<HR>
+<!-- ================================================================= -->
+
+
+<ADDRESS>
+<A HREF="http://www.stups.uni-duesseldorf.de/w/Imprint">Imprint</A>
+</ADDRESS>

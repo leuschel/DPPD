@@ -1,0 +1,140 @@
+<HTML><HEAD>
+<TITLE>DPPD: liftsolve.db1</TITLE>
+</HEAD>
+
+<BODY>
+
+<H2>The "<DFN>liftsolve.db1</DFN>" Benchmark</H2>
+
+Part of the <A HREF="../dppd.html">DPPD Library</A>.
+
+
+<H3>General Description</H3>
+
+Specialise the lifting meta-interpreter for the ground representation 
+(adapted from a "non-executable" but specialisable one by John Gallagher,
+ similar to the InstanceDemo by Hill and Gallagher)
+with the append program as object program.
+Some details about this meta-interpreter can also be found
+ in a 
+<A HREF=http://www.cs.kuleuven.ac.be/cwis/research/dtai/publications/abstracts.95.html#leuschel.pepm95.abstract>PEPM'95 paper</A> by Michael Leuschel
+ and Danny De Schreye.
+
+<H3>The benchmark program</H3>
+
+<PRE>
+/* --------------------- */
+/* solve(GrRules,NgGoal) */
+/* --------------------- */
+solve(GrRules,[]).
+solve(GrRules,[NgH|NgT]) :-
+	non_ground_member(term(clause,[NgH|NgBody]),GrRules),
+	solve(GrRules,NgBody),
+	solve(GrRules,NgT).
+
+/* -------------------------------------- */
+/* non_ground_member(NgExpr,GrListOfExpr) */
+/* -------------------------------------- */
+non_ground_member(NgX,[GrH|GrT]) :-
+	make_non_ground(GrH,NgX).
+non_ground_member(NgX,[GrH|GrT]) :-
+	non_ground_member(NgX,GrT).
+
+
+/* --------------------------------------------------- */
+/* make_non_ground(GroundRepOfExpr,NonGroundRepOfExpr) */
+/* --------------------------------------------------- */
+make_non_ground(G,NG) :-
+	mkng(G,NG,[],Sub).
+
+mkng(var(N),X,[],[sub(N,X)]).
+mkng(var(N),X,[sub(N,X)|T],[sub(N,X)|T]).
+mkng(var(N),X,[sub(M,Y)|T],[sub(M,Y)|T1]) :-
+	N \== M,
+	mkng(var(N),X,T,T1).
+mkng(term(F,Args),term(F,IArgs),InSub,OutSub) :-
+	l_mkng(Args,IArgs,InSub,OutSub).
+
+l_mkng([],[],Sub,Sub).
+l_mkng([H|T],[IH|IT],InSub,OutSub) :-
+	mkng(H,IH,InSub,IntSub),
+	l_mkng(T,IT,IntSub,OutSub).
+
+
+member(X,[X|T]).
+member(X,[Y|T]) :-
+	member(X,T).
+
+append([],L,L).
+append([H|T],M,[H|T2]) :-
+	append(T,M,T2).
+</PRE>
+
+
+<H3>The partial deduction query</H3>
+
+<PRE>
+ :- solve([
+	 term(clause,[term(app,[term(null,[]),var(l),var(l)]) ]),
+	 term(clause,[term(app,[term(cons,[var(h),var(x)]),var(y),
+					term(cons,[var(h),var(z)])]),
+		term(app,[var(x),var(y),var(z)]) ])
+		],
+	[term(app,[X,Y,Z])]).
+</PRE>
+
+
+
+<H3>The run-time queries</H3>
+
+<PRE>
+ :- solve([
+	 term(clause,[term(app,[term(null,[]),var(l),var(l)]) ]),
+	 term(clause,[term(app,[term(cons,[var(h),var(x)]),var(y),
+					term(cons,[var(h),var(z)])]),
+		term(app,[var(x),var(y),var(z)]) ])
+		],
+	[term(app,[term(null,[]),Y,Z])]).
+
+ :- solve([
+	 term(clause,[term(app,[term(null,[]),var(l),var(l)]) ]),
+	 term(clause,[term(app,[term(cons,[var(h),var(x)]),var(y),
+					term(cons,[var(h),var(z)])]),
+		term(app,[var(x),var(y),var(z)]) ])
+		],
+	[term(app,[term(cons,[term(a,[]),term(null,[])]),
+			term(cons,[term(b,[]),term(null,[])]),Z])]).
+
+ :- solve([
+	 term(clause,[term(app,[term(null,[]),var(l),var(l)]) ]),
+	 term(clause,[term(app,[term(cons,[var(h),var(x)]),var(y),
+					term(cons,[var(h),var(z)])]),
+		term(app,[var(x),var(y),var(z)]) ])
+		],
+	[term(app,[X,Y,term(cons,[term(a,[]),term(cons,
+					[term(b,[]),term(null,[])])])])]).
+</PRE>
+
+
+
+<H3>Example solution</H3>
+
+With the 
+<A HREF="/~mal/systems/ecce.html">ECCE partial deduction system </A> one can obtain the following program, which runs 20 times
+ faster than the original and in which the overhead of the
+ ground representation has been almost completely removed:
+
+<PRE>
+solve__1(term(null,[]),X1,X1).
+solve__1(term(cons,[X1,X2]),X3,term(cons,[X1,X4])) :- 
+    solve__1(X2,X3,X4).
+</PRE>
+
+
+<HR>
+<!-- ================================================================= -->
+
+
+<ADDRESS>
+<A HREF="http://www.stups.uni-duesseldorf.de/w/Imprint">Imprint</A>
+</ADDRESS>

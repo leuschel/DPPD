@@ -1,0 +1,56 @@
+<html><head><title>DPPD: ctl</title></head><body>
+
+<h2>The "<dfn>multiply(clpr)</dfn>" Benchmark</h2>
+
+Part of the <a href="http://www.ecs.soton.ac.uk/%7Emal/systems/dppd.html">DPPD Library</a>.
+
+
+<h3>General Description</h3>
+
+This is a very simple multiple predicate written
+in Sicstus clp(r).   
+
+<h3>The benchmark program</h3>
+
+<pre>
+multiply(_,Y,R) :- 
+              {Y =0, R = 0}.
+multiply(X,Y,R) :- 
+              {
+	        Y > 0, 
+		Y1 = Y - 1,
+	        R = X + R1
+	      }, multiply(X,Y1,R1).
+</pre>
+
+<h3>The partial deduction query</h3>
+:- multiply(X, 100, R).
+
+<h3>The run-time query (600 times)</h3>
+:- multiply(1000,100, R).
+
+<h3>Example solution </h3>
+
+The following specialised program can be obtained by using the Logen partial deduction system with clp(R,Q) extensions.  
+<pre>
+multiply__1(B,100,C) :- 
+  {
+    C = ((100) * B)
+  }.
+multiply(A,100,C) :-
+        multiply__1(A,100,C).
+</pre>
+
+
+
+
+
+
+
+<hr>
+<!-- ================================================================= -->
+
+
+<address>
+<a href="http://www.ecs.soton.ac.uk/%7Emal/michael.html">Michael Leuschel</a>
+</address></body></html>

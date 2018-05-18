@@ -1,0 +1,61 @@
+<html><head><title>DPPD: ctl</title></head><body>
+
+<h2>The "<dfn>loanMemo(clpr)</dfn>" Benchmark</h2>
+
+Part of the <a href="http://www.ecs.soton.ac.uk/%7Emal/systems/dppd.html">DPPD Library</a>.
+
+
+<h3>General Description</h3>
+
+This predicate calculates outstanding loan balances and has been written in clp(R).
+
+
+<h3>The benchmark program</h3>
+
+<pre>
+map(_,[_],_).
+map(P,[H1,H2|Tail], Repayment) :-
+        Call =.. [P,H1,H2, Repayment],
+        call(Call), 
+        map(P,[H2|Tail], Repayment).
+
+calcLoan(Amount,NewTotal, Interest, Repay) :-
+        {NewTotal = Amount + (Amount * Interest) - Repay}.
+
+</pre>
+
+<h3>The partial deduction query</h3>
+:- map(scheme1, L1, Repayment).<br/
+:- map(shceme2, L1, Repayment).
+
+<h3>The run-time query (10000 times)</h3>
+:- map(scheme1, [7000,A,B,C,D], 400).
+
+
+<h3>Example solution </h3>
+
+
+<pre>
+map(scheme1,A,B) :- map__1(A,B).
+map(scheme2,A,B) :- map__2(A,B).
+map__1([B],C).
+map__1([D,E|F],G) :- 
+  {E = ((201/200) * D ) - G },  map__1([E|F],G).
+map__2([B],C).
+map__2([D,E|F],G) :- 
+  { E = ((101/100) * D) - G }, map__2([E|F],G).
+</pre>
+
+
+
+
+
+
+
+<hr>
+<!-- ================================================================= -->
+
+
+<address>
+<a href="http://www.ecs.soton.ac.uk/%7Emal/michael.html">Michael Leuschel</a>
+</address></body></html>

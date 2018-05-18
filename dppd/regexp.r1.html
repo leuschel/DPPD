@@ -1,0 +1,82 @@
+<HTML><HEAD>
+<TITLE>DPPD: regexp.r1</TITLE>
+</HEAD>
+
+<BODY>
+
+<H2>The "<DFN>regexp.r1</DFN>" Benchmark</H2>
+
+Part of the <A HREF="../dppd.html">DPPD Library</A>.
+
+
+<H3>General Description</H3>
+
+A program testing whether a string matches a regular expression (using difference lists). Much more naive (and smaller) than the program used by Mogensen/Bondorf for Logimix !
+The regular expression for this benchmark is (a+b)*aab.
+
+This benchmark
+ contains no built-in's nor negations.
+
+<H3>The benchmark program</H3>
+
+<PRE>
+generate(empty,T,T).
+
+generate(char(X),[X|T],T).
+
+generate(or(X,Y),H,T) :- generate(X,H,T).
+generate(or(X,Y),H,T) :- generate(Y,H,T).
+
+generate(cat(X,Y),H,T) :- generate(X,H,T1), generate(Y,T1,T).
+
+generate(star(X),T,T).
+generate(star(X),H,T) :- generate(X,H,T1), generate(star(X),T1,T).
+</PRE>
+
+
+<H3>The partial deduction query</H3>
+
+<PRE>
+ :- generate(cat(star(or(char(a),char(b))), cat(char(a),cat(char(a),char(b)))), S, []).
+</PRE>
+
+
+
+<H3>The run-time queries</H3>
+
+<PRE>
+ :- generate(cat(star(or(char(a),char(b))), cat(char(a),cat(char(a),char(b)))),
+		[a,a,a,a,a,a,b,b,a,a,a,b],[]).
+ :- generate(cat(star(or(char(a),char(b))), cat(char(a),cat(char(a),char(b)))),
+		[a,a,a,a,a,a,b,b,a,b],[]).
+ :- generate(cat(star(or(char(a),char(b))), cat(char(a),cat(char(a),char(b)))),
+		[a,b,a,b,a,b,a,b,a,b,a],[]).
+ :- generate(cat(star(or(char(a),char(b))), cat(char(a),cat(char(a),char(b)))),
+		[X,Y,Z,V],[]).
+</PRE>
+
+
+
+<H3>Example solution</H3>
+
+The following can be obtained by the 
+<A HREF="/~mal/systems/ecce.html">ECCE partial deduction system </A>.
+Although it runs considerably faster than the original program (5 times
+ actually) it does
+ not correspond to a deterministic automaton yet.
+
+<PRE>
+ generate__1(X1) :- generate__2(X1).
+ generate__2([a,a,b]).
+ generate__2([a|X1]) :- generate__2(X1).
+ generate__2([b|X1]) :- generate__2(X1).
+</PRE>
+
+
+<HR>
+<!-- ================================================================= -->
+
+
+<ADDRESS>
+<A HREF="http://www.stups.uni-duesseldorf.de/w/Imprint">Imprint</A>
+</ADDRESS>

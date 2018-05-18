@@ -1,0 +1,79 @@
+<HTML><HEAD>
+<TITLE>DPPD: applast</TITLE>
+</HEAD>
+
+<BODY>
+
+<H2>The "<DFN>applast</DFN>" Benchmark</H2>
+
+Part of the <A HREF="../dppd.html">DPPD Library</A>.
+
+
+<H3>General Description</H3>
+
+This is a benchmark by Michael Leuschel which
+ contains no built-in's nor negations.
+Solving this benchmarks requires conjunctive partial deductions
+ as well as a bottom-up success propagation.
+It is a simple example which illustrates the difficulties that can arise
+when specialising the ground representation.
+More details can be found in the technical reports
+ <A HREF=http://www.cs.kuleuven.ac.be/cwis/research/dtai/publications/abstracts.95.html#CW210.abstract>CW 210</A> and
+ <A HREF=http://www.cs.kuleuven.ac.be/cwis/research/dtai/publications/abstracts.96.html#CW232.abstract>CW 232</A>.
+
+<H3>The benchmark program</H3>
+
+<PRE>
+applast(L,X,Last) :- append(L,[X],LX),last(Last,LX).
+
+last(X,[X]).
+last(X,[H|T]) :- last(X,T).
+
+append([],L,L).
+append([H|L1],L2,[H|L3]) :- append(L1,L2,L3).
+</PRE>
+
+
+<H3>The partial deduction query</H3>
+
+<PRE>
+ :- applast(L,X,Last).
+</PRE>
+
+
+
+<H3>The run-time queries</H3>
+
+<PRE>
+ :- applast([a,b,c,d],L,e).
+ :- applast([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,a,a,b,w,x,y],z,L).
+ :- applast([a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,a,a,b,w,x,y],z,q).
+</PRE>
+
+
+
+<H3>Example solution</H3>
+
+Combined with a bottom-up propagation 
+ (for more details see the technical report
+ <A HREF=http://www.cs.kuleuven.ac.be/cwis/research/dtai/publications/abstracts.96.html#CW232.abstract>CW 232</A>
+ )
+ the <A HREF="../ecce.html">ECCE partial deduction
+ system</A>
+can obtain the following program:
+
+<PRE>
+ applast__1(L,a) :- al(L).
+
+ al([]).
+ al([H|T]) :- al(T).
+</PRE>
+
+
+<HR>
+<!-- ================================================================= -->
+
+
+<ADDRESS>
+<A HREF="http://www.stups.uni-duesseldorf.de/w/Imprint">Imprint</A>
+</ADDRESS>

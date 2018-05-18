@@ -1,0 +1,88 @@
+<HTML><HEAD>
+<TITLE>DPPD: doubleapp</TITLE>
+</HEAD>
+
+<BODY>
+
+<H2>The "<DFN>doubleapp</DFN>" Benchmark</H2>
+
+Part of the <A HREF="../dppd.html">DPPD Library</A>.
+
+
+<H3>General Description</H3>
+
+This is a naive implementation for a predicate that appends
+ three lists, written using two calls to the ordinary
+ <CODE>append</CODE> predicate.
+This program is inefficient because the intermediate variable
+ <CODE>Int</CODE> is constructed by the first call to <CODE>append</CODE>
+ and then traversed again by the second call to <CODE>append</CODE>.
+
+
+<H3>The benchmark program</H3>
+
+<PRE>
+double_app(X,Y,Z,Res) :-
+	app(X,Y,Int),
+	app(Int,Z,Res).
+
+app([],L,L).
+app([H|X],Y,[H|Z]) :-
+	app(X,Y,Z).
+</PRE>
+
+
+<H3>The partial deduction query</H3>
+
+<PRE>
+ :- double_app(X,Y,Z,Res).
+</PRE>
+
+
+
+<H3>The run-time queries</H3>
+
+<PRE>
+ :- double_app([],[a],[b,c],Res).
+ :- double_app([a,b,c],[d,e,f],[g,h,i],Res).
+ :- double_app([1,5,3,2,6,3,7,3,2,1,8,5,3,5,2,3],
+		    [1,5,3,2,6,3,7,3,2,1,8,5,3,5,2,3],
+		    [1,5,3,2,6,3,7,3,2,1,8,5,3,5,2,3],Res).
+ :- double_app([1,5,3,2,6,3,7,3,2,1,8,5,3,5,2,3],
+		    [1,5,3,2,6,3,7,3,2,1,8,5,3,5,2,3],
+		    [1,5,3,2,6,3,7,3,2,1,8,5,3,5,2,3],Res).
+</PRE>
+
+
+
+<H3>Example solution</H3>
+
+The following specialised program can be obtained by the
+ <A HREF="/~mal/systems/ecce.html">ECCE
+ partial deduction system </A>.
+Note that the unnecessary variable <CODE>Int</CODE> has been
+ removed (i.e. deforestation has been performed).
+(Also note that the two predicates <CODE>double_app__1</CODE>
+ and <CODE>app_conj__2</CODE> are identical and could be merged.)
+
+<PRE>
+double_app__1([],X1,X2,X3) :-  app__3(X1,X2,X3).
+double_app__1([X1|X2],X3,X4,[X1|X5]) :- 
+    app_conj__2(X2,X3,X4,X5).
+
+app_conj__2([],X1,X2,X3) :-  app__3(X1,X2,X3).
+app_conj__2([X1|X2],X3,X4,[X1|X5]) :- 
+    app_conj__2(X2,X3,X4,X5).
+
+app__3([],X1,X1).
+app__3([X1|X2],X3,[X1|X4]) :- app__3(X2,X3,X4).
+</PRE>
+
+
+<HR>
+<!-- ================================================================= -->
+
+
+<ADDRESS>
+<A HREF="http://www.stups.uni-duesseldorf.de/w/Imprint">Imprint</A>
+</ADDRESS>

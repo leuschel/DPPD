@@ -1,0 +1,72 @@
+<HTML><HEAD>
+<TITLE>DPPD: petri-meta</TITLE>
+</HEAD>
+
+<BODY>
+
+<H2>The "<DFN>petri-meta</DFN>" Benchmark</H2>
+
+Part of the <A HREF="../dppd.html">DPPD Library</A>.
+
+
+<H3>General Description</H3>
+
+A metainterpreter for Petri nets with the net
+of the <A HREF="petri-object.html">petri-object</A>
+benchmark at the object level.
+The goal is to prove that for the Petri net at hand
+(and for <I>any</I> number of processes)
+there is no trace that leads to an unsafe state with
+more than 1 process in its critical section.
+
+<H3>The benchmark program</H3>
+
+<PRE>
+tr(Tr,X,St) :-
+	trace(Tr,[X,s(0),0,0,0],St).
+	
+trace([],State,State).
+trace([Action|As],InState,OutState) :-
+	trans(Action,InState,S1),
+	trace(As,S1,OutState).
+
+trans(enter_cs,[s(X),s(Sema),CritSec,Y,C],
+	       [X,Sema,s(CritSec),Y,C]).
+trans(exit_cs, [X,Sema,s(CritSec),Y,C],
+	       [X,s(Sema),CritSec,s(Y),C]).
+trans(restart, [X,Sema,CritSec,s(Y),ResetCtr],
+	       [s(X),s(Sema),CritSec,Y,s(ResetCtr)]).
+
+</PRE>
+
+
+<H3>The partial deduction query</H3>
+
+<PRE>
+ :-  tr(Tr,X,[_,_,s(s(_)),_,_]).
+</PRE>
+
+
+
+
+<H3>Example solution</H3>
+
+For the more simple case X=0, it is possible to obtain
+ a solution with the 
+<A HREF="../ecce.html">ECCE partial deduction system </A> together with the more specific program construction,
+ which is basically as follows:
+
+<PRE>
+tr(Tr,0,[_,_,s(s(_)),_,_]) :- fail.
+</PRE>
+
+For the general case, ECCE is not yet able to achieve this.
+
+
+<HR>
+<!-- ================================================================= -->
+
+
+<ADDRESS>
+<A HREF="http://www.stups.uni-duesseldorf.de/w/Imprint">Imprint</A>
+</ADDRESS>
