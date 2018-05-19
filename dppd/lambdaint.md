@@ -1,0 +1,232 @@
+The "lambdaint" Benchmark
+-------------------------
+
+Part of the [DPPD Library](../dppd.html).
+
+### General Description
+
+This program is an interpreter for a simple functional language. More
+details can be found in the paper:
+
+1.  [M. Leuschel, S.-J. Craig, M. Bruynooghe, W. Vanhoof, Specialising
+    Interpreters Using Offline Partial Deduction, in: Program
+    Development in Computational Logic, Springer LNCS 3049, 2004, pp.
+    340-375.](http://www.stups.uni-duesseldorf.de/w/Special:Publication/LeCrBrVa04_19)
+
+### The benchmark program
+
+The lambdaint interpreter contains some side-effects and non-declarative
+features. It can still be run through ECCE, but there is actually no
+guarantee that ECCE will preserve the side-effects and their order.
+Note: the program below also contains hints for the [BTA for Logen based
+on
+size-change-analysis](http://www.stups.uni-duesseldorf.de/w/Special:Publication/LeVi08_234).
+
+
+        %:- mode l_eval(i,i,o).
+
+        l_eval([],_E,[]).
+        l_eval([H|T],E,[EH|ET]) :-
+            eval(H,E,EH),
+            l_eval(T,E,ET).
+
+        %:- mode eval(i,i,o).
+
+        % annotations below are now sufficient:
+        % Still need to split ENV into static and dynamic component to further improve performance
+        '$MEMOANN'(eval,3,[s,d,d]).
+        '$MEMOANN'(eval_if,5,[s,s,s,d,d]).
+        '$MEMOANN'(l_eval,3,[s,d,d]).
+        '$MEMOANN'(test,2,[s,d]).
+
+        %'$UNFOLDCALLS'(eval(_,_,_,_)) :- true.
+        %'$UNFOLDCALLS'(test(_,_,_)) :- true.
+
+        /* eval(X,E,R) :- print(eval(X,E)),nl,fail. */
+        eval(cst(C),_Env,constr(C,[])).
+        eval(constr(C,Args),Env,constr(C,EArgs)) :-
+            l_eval(Args,Env,EArgs).
+        eval(var(VKey),Env,Val) :- lookup(VKey,Env,Val).
+        eval(plus(X,Y),Env,constr(XY,[])) :-
+            eval(X,Env,constr(VX,[])),
+            eval(Y,Env,constr(VY,[])),
+            XY is VX + VY.
+        eval(minus(X,Y),Env,constr(XY,[])) :-
+            eval(X,Env,constr(VX,[])),
+            eval(Y,Env,constr(VY,[])),
+            XY is VX - VY.
+        eval(times(X,Y),Env,constr(XY,[])) :-
+            eval(X,Env,constr(VX,[])),
+            eval(Y,Env,constr(VY,[])),
+            XY is VX * VY.
+        eval(eq(X,Y),Env,constr(BoolRes,[])) :-
+            eval(X,Env,VX),
+            eval(Y,Env,VY),
+            (VX=VY -> (BoolRes = true) ; (BoolRes = false)).
+        eval(let(VKey,VExpr,InExpr),Env,Result) :-
+                eval(VExpr,Env,VVal),
+                store(Env,VKey,VVal,InEnv),
+                eval(InExpr,InEnv,Result).
+        eval(if(Test,Then,Else), Env, Res) :-
+            eval_if(Test,Then,Else,Env,Res).
+
+        %eval(if(Test,Then,Else),Env,Res) :-
+        %   eval(Test,Env,TestRes),
+        %   ((TestRes = constr(true,[]))
+        %     -> eval(Then,Env,Res)
+        %      ;  eval(Else,Env,Res)
+        %     ).
+        eval(lambda(X,Expr),_Env,lambda(X,Expr)).
+        eval(apply(Arg,F),Env,Res) :-
+           % print(apply(Arg,F,Env)),nl,
+            eval_fun(F,Env,FVal),    %% FVal could be dynamic with eval instead of eval_fun
+            %print(FVal),nl,
+            %%rename(FVal,Env,lambda(X,Expr)),
+            FVal = lambda(X,Expr),
+            %print(eval_arg(Arg,Env)),nl,
+            eval(Arg,Env,ArgVal),
+            %print(arg(ArgVal)),nl,
+            store(Env,X,ArgVal,NewEnv),
+           % print(new_eval(Expr,NewEnv)),nl,
+            eval(Expr,NewEnv,Res).
+        eval(fun(F),_,FunDef) :- function(F,FunDef).
+        eval(print(X),_,constr(true,[])) :-
+           print(X),nl.
+
+        rename(Expr,_Env,RenExpr) :- RenExpr = Expr.
+
+        eval_fun(lambda(X,Expr),_,lambda(X,Expr)).
+        eval_fun(fun(F),_,FunDef) :- function(F,FunDef).
+        % TO DO: add let, if, ... if needed ???
+        % NOTE: eval_fun must provide a static last argument upon success
+
+        eval_if(Test, Then, _Else, Env, Res) :-
+            test(Test,Env),
+            !,
+            eval(Then,Env,Res).
+
+        eval_if(_Test,_Then,Else, Env, Res) :-
+            eval(Else,Env,Res).
+
+        test(eq(X,Y), Env) :-
+            eval(X,Env,VX),
+            eval(Y,Env,VX).
+
+
+
+        function(fib, lambda(x,
+                             if(eq(var(x),cst(0)),
+                                 cst(1),
+                                 if(eq(var(x),cst(1)),
+                                    cst(1),
+                                    plus(apply(minus(var(x),cst(1)),fun(fib)),
+                                         apply(minus(var(x),cst(2)),fun(fib)))
+                                    )
+                                )
+                            )).
+
+        %:- mode store(i,i,i,o).
+
+        store([],Key,Value,[Key/Value]).
+        store([Key/_Value2|T],Key,Value,[Key/Value|T]).
+        store([Key2/Value2|T],Key,Value,[Key2/Value2|BT]) :-
+           Key \== Key2,
+           store(T,Key,Value,BT).
+
+        %:- mode lookup(i,i,o).
+
+        lookup(Key,[Key/Value|_T],Value).
+        lookup(Key,[Key2/_Value2|T],Value) :-
+           Key \== Key2,
+           lookup(Key,T,Value).
+
+
+
+        fib(X,FibX) :-
+                        store([],xx,constr(X,[]),Env),
+                        eval(apply(var(xx),fun(fib)),Env,constr(FibX,_)).
+                      %  eval(apply(cst(X),fun(fib)),Env,constr(FibX,_)).
+
+        bench(Low,Up) :- Low>Up, print('Done'),nl.
+
+        bench(Low,Up) :-
+            Low =< Up, 
+            print(fib(Low)), print(' == '), 
+            statistics(runtime,[_,_]),
+            fib(Low,Res),!,statistics(runtime,[_,T]),print(Res), print(' : time = '),
+            print(T),nl,
+            L1 is Low+1,
+        %    print('debug'),
+            bench(L1,Up).
+
+
+
+        %:- bench(15,20).
+        bta_entry(bench,2,[d,d]).
+
+### The partial deduction query
+
+     :- bench(L,U).
+
+### The run-time queries
+
+     :- bench(15,20).
+
+### Example solution
+
+Result obtained by calling `ecce tests/lambdaint.pl -pe "bench(X,Y)"`:
+
+        /* Specialised program generated by ECCE 2.0 */
+        /* PD Goal: A */
+        /* Parameters: Abs:l InstCheck:v Msv:s NgSlv:g Part:e Prun:n Sel:t Whstl:f Raf:yesFar:yes Dce:yes Poly:y Dpu:yes ParAbs:yes Msvp:no Rrc:yes */
+        /* Transformation time: 200 ms */
+        /* Unfolding time: 170 ms */
+        /* Post-Processing time: 200 ms */
+
+        /* Specialised Predicates: 
+        bench__1(A,B) :- bench(A,B).
+        eval_if__2(A,B) :- eval_if(eq(var(x),cst(0)),cst(1),if(eq(var(x),cst(1)),cst(1),plus(apply(minus(var(x),cst(1)),fun(fib)),apply(minus(var(x),cst(2)),fun(fib)))),['/'(xx,constr(C1,[])),'/'(x,constr(A,[]))],constr(B,D1)).
+        eval_if__3(A,B,C) :- eval_if(eq(var(x),cst(1)),cst(1),plus(apply(minus(var(x),cst(1)),fun(fib)),apply(minus(var(x),cst(2)),fun(fib))),['/'(xx,constr(D1,[])),'/'(x,constr(A,[]))],constr(B,C)).
+        eval__4(A,B) :- eval(if(eq(var(x),cst(0)),cst(1),if(eq(var(x),cst(1)),cst(1),plus(apply(minus(var(x),cst(1)),fun(fib)),apply(minus(var(x),cst(2)),fun(fib))))),['/'(xx,constr(C1,[])),'/'(x,constr(A,[]))],constr(B,[])).
+        */
+
+        bench(A,B) :- 
+            bench__1(A,B).
+        bench__1(A,B) :- 
+            A > B, 
+            print('Done'), 
+            nl.
+        bench__1(A,B) :- 
+            A =< B, 
+            print(fib(A)), 
+            print(' == '), 
+            statistics(runtime,[C,D]), 
+            eval_if__2(A,E), 
+            '!', 
+            statistics(runtime,[F,G]), 
+            print(E), 
+            print(' : time = '), 
+            print(G), 
+            nl, 
+            H is '+'(A,1), 
+            bench__1(H,B).
+        eval_if__2(0,1) :- 
+            '!'.
+        eval_if__2(A,B) :- 
+            eval_if__3(A,B,C).
+        eval_if__3(1,1,[]) :- 
+            '!'.
+        eval_if__3(A,B,[]) :- 
+            C is '-'(A,1), 
+            eval__4(C,D), 
+            E is '-'(A,2), 
+            eval__4(E,F), 
+            B is '+'(D,F).
+        eval__4(0,1) :- 
+            '!'.
+        eval__4(A,B) :- 
+            eval_if__3(A,B,[]). 
+
+------------------------------------------------------------------------
+
+[Imprint](http://www.stups.uni-duesseldorf.de/w/Imprint)
