@@ -40,4 +40,4 @@ The run-time query (10000 times)
 
 ------------------------------------------------------------------------
 
-[Michael Leuschel](http://www.ecs.soton.ac.uk/%7Emal/michael.html)
+[Michael Leuschel](https://github.com/leuschel)

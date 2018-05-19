@@ -41,4 +41,4 @@ partial deduction system with clp(R,Q) extensions.
 
 ------------------------------------------------------------------------
 
-[Michael Leuschel](http://www.ecs.soton.ac.uk/%7Emal/michael.html)
+[Michael Leuschel](https://github.com/leuschel)

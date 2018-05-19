@@ -346,4 +346,4 @@ runs 35% faster than the original program.
 
 ------------------------------------------------------------------------
 
-[Michael Leuschel](http://www.ecs.soton.ac.uk/%7Emal/michael.html)
+[Michael Leuschel](https://github.com/leuschel)
