@@ -29,7 +29,7 @@ The benchmarks marked with (LK) are the original Lam and Kusalik benchmarks. Ben
 #### Pure LP benchmarks
 
 *   [advisor](dppd/advisor.md)
-*   [applast](dppd/applast.html)
+*   [applast](dppd/applast.md)
 *   [ctl](dppd/ctl.html)
 *   [contains](dppd/contains.lam.html) (LK)
 *   [contains.kmp](dppd/contains.kmp.html)
