@@ -31,7 +31,7 @@ append(\[H|L1\],L2,\[H|L3\]) :- append(L1,L2,L3).
 
 ### Example solution
 
-Combined with a bottom-up propagation (for more details see the technical report [CW 232](http://www.cs.kuleuven.ac.be/cwis/research/dtai/publications/abstracts.96.html#CW232.abstract) ) the [ECCE partial deduction system](../ecce.html) can obtain the following program:
+Combined with a bottom-up propagation (for more details see the technical report [CW 232](http://www.cs.kuleuven.ac.be/cwis/research/dtai/publications/abstracts.96.html#CW232.abstract) ) the [ECCE partial deduction system](https://github.com/leuschel/ecce) can obtain the following program:
 
  applast__1(L,a) :- al(L).
 

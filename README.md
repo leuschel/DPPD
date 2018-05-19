@@ -7,7 +7,10 @@ Maintained by Michael Leuschel. Suggestions, comments or new benchmark ideas, ar
 
 This library aims at being a standard suite of benchmarks for partial deduction. It started out by the observation that the only accepted benchmark suite in partial deduction (the so called Lam and Kusalik benchmarks) contains too few benchmarks, most of which are too simple and too small. So the idea came up to generate something like the TPTP (Thousands of Problems for Theorem Proving) library, but for partial deduction.
 
-The library contains benchmarks consisting of declarative logic programs, together with descriptions on the particular specialisation that should be performed by a partial deducer. The library also contains run-time queries by which the specialised program should be compared to the original.
+The library contains benchmarks consisting of declarative logic programs, together with descriptions on the particular specialisation that should be performed by a partial deducer.
+The library also contains run-time queries by which the specialised program should be compared to the original.
+
+See also the [ECCE](https://github.com/leuschel/ecce) partial deduction system.
 
 ### Allowed Built-in's
 
