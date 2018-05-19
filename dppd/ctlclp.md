@@ -2,7 +2,7 @@ The "ctl(clpr)" Benchmark
 -------------------------
 
 Part of the [DPPD
-Library](https://github.com/leuschel/DPPDl).
+Library](https://github.com/leuschel/DPPD).
 
 ### General Description
 
