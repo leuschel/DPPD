@@ -1,7 +1,7 @@
 The "upto.sum2" Benchmark
 -------------------------
 
-Part of the [DPPD Library](../dppd.html).
+Part of the [DPPD Library](https://github.com/leuschel/DPPD).
 
 ### General Description
 

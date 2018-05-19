@@ -1,7 +1,7 @@
 The "rev\_acc\_type.inffail" Benchmark
 --------------------------------------
 
-Part of the [DPPD Library](../dppd.html).
+Part of the [DPPD Library](https://github.com/leuschel/DPPD).
 
 ### General Description
 
